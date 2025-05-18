@@ -8,7 +8,7 @@ export default function AuthLayout() {
         <img src="/logo.svg" alt="GlobalTree Logo" />
         <Outlet />
       </div>
-      <Toaster />
+      <Toaster position="top-right" duration={6_000} />
     </main>
   );
 }
