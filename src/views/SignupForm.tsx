@@ -1,8 +1,9 @@
 import { useForm } from "react-hook-form";
 import FormError from "../components/FormError";
 import type { SignupFields } from "../typings/Form";
-import axios, { isAxiosError } from "axios";
 import { toast } from "sonner";
+import { isAxiosError } from "axios";
+import { api } from "../lib/Client";
 
 export default function SignupForm() {
   const defaultValues: SignupFields = {
@@ -22,7 +23,7 @@ export default function SignupForm() {
 
   async function onSubmit(fields: SignupFields) {
     try {
-      await axios.post(`${import.meta.env.VITE_API_URL}/auth/create`, fields);
+      await api.post(`${import.meta.env.VITE_API_URL}/auth/create`, fields);
       toast.success("Account created successfully");
       reset();
     } catch (error) {
@@ -36,7 +37,7 @@ export default function SignupForm() {
   return (
     <form
       onSubmit={handleSubmit(onSubmit)}
-      className="bg-white px-5 py-20 rounded-lg space-y-10 mt-10 text-black"
+      className="py-6 space-y-10"
     >
       <div className="grid grid-cols-1 space-y-3">
         <label htmlFor="name" className="text-2xl text-slate-500">
