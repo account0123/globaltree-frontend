@@ -8,3 +8,8 @@ export type SignupFields = LoginCredentials & {
     slug: string | undefined;
     password2: string;
 }
+
+export type ProfileEditFields = {
+    slug: string;
+    description?: string;
+}

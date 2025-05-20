@@ -3,9 +3,11 @@ import FormError from "../components/FormError";
 import type { SignupFields } from "../typings/Form";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
-import { api } from "../lib/Client";
+import { useClient } from "../lib/Client";
 
 export default function SignupForm() {
+
+  const client = useClient();
   const defaultValues: SignupFields = {
     name: "",
     email: "",
@@ -23,7 +25,7 @@ export default function SignupForm() {
 
   async function onSubmit(fields: SignupFields) {
     try {
-      await api.post(`${import.meta.env.VITE_API_URL}/auth/create`, fields);
+      await client.createAccount(fields);
       toast.success("Account created successfully");
       reset();
     } catch (error) {

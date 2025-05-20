@@ -1,11 +1,15 @@
 import { useForm } from "react-hook-form";
 import FormError from "../components/FormError";
 import type { LoginCredentials } from "../typings/Form";
-import { api } from "../lib/Client";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
+import localforage from "localforage";
+import { useNavigate } from "react-router";
+import { useClient } from "../lib/Client";
 
 export default function LoginForm() {
+  const navigate = useNavigate();
+  const client = useClient();
   const defaultValues: LoginCredentials = {
     email: "",
     password: "",
@@ -20,9 +24,11 @@ export default function LoginForm() {
 
   async function onSubmit(fields: LoginCredentials) {
     try {
-      const response = await api.post(`${import.meta.env.VITE_API_URL}/auth/login`, fields);
-      toast.success(response.data);
+      await client.login(fields);
+      toast.success("Authenticated successfully");
       reset();
+      await localforage.setItem("session", client.session);
+      navigate("/dashboard");
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         console.error(error.response.data);
