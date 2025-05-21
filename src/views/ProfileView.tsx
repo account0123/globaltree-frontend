@@ -1,18 +1,47 @@
 import { useForm } from "react-hook-form";
 import FormError from "../components/FormError";
 import type { ProfileEditFields } from "../typings/Form";
-import { useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient } from "@tanstack/react-query";
 import type { User } from "../typings/app";
+import { useClient } from "../lib/Client";
+import { toast } from "sonner";
 
 export default function ProfileView() {
 
-  const client = useQueryClient();
-  const user: User | undefined = client.getQueryData(["user"]);
+  const qClient = useQueryClient();
+  const apiClient = useClient();
+  const user: User | undefined = qClient.getQueryData(["user"]);
+  const userMutation = useMutation({
+    mutationFn: (data: ProfileEditFields) => apiClient.patchClientUser(data),
+    onSuccess: () => {
+      toast.success("Profile updated");
+      qClient.invalidateQueries({
+        queryKey: ["user"],
+      });
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`);
+    }
+  });
+
+  const avatarMutation = useMutation({
+    mutationFn: (file: File) => apiClient.uploadAvatar(file),
+    onSuccess: () => {
+      toast.success("Avatar updated");
+      qClient.invalidateQueries({
+        queryKey: ["user"],
+      });
+    },
+    onError: (error) => {
+      toast.error(`Error: ${error.message}`);
+    }
+  });
 
   const defaultValues: ProfileEditFields = {
     slug: user?.slug || "",
     description: user?.description || "",
   };
+
   const {
     register,
     handleSubmit,
@@ -20,9 +49,17 @@ export default function ProfileView() {
   } = useForm({
     defaultValues,
   });
-  function onSumbit(data: ProfileEditFields) {
-    console.log(data);
+
+  function onImageChange(event: React.ChangeEvent<HTMLInputElement>) {
+    const file = event.target.files?.[0];
+    if (!file) return;
+    avatarMutation.mutate(file);
   }
+
+  function onSumbit(data: ProfileEditFields) {
+    userMutation.mutate(data);
+  }
+
   return (
     <form
       className="bg-white text-black p-10 rounded-lg space-y-5"
@@ -65,7 +102,7 @@ export default function ProfileView() {
           name="image"
           className="border-none bg-slate-100 rounded-lg p-2"
           accept="image/*"
-          onChange={() => {}}
+          onChange={onImageChange}
         />
       </div>
 

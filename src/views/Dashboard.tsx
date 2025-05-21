@@ -2,6 +2,7 @@ import { Link, Outlet } from "react-router";
 import { Toaster } from "sonner";
 import NavigationTabs from "../components/NavigationTabs";
 import type { User } from "../typings/app";
+import Profile from "../components/Profile";
 
 export default function Dashboard({ user }: { user: User }) {
     return (<>
@@ -15,7 +16,7 @@ export default function Dashboard({ user }: { user: User }) {
                 className=" bg-lime-500 p-2 text-slate-800 uppercase font-black text-xs rounded-lg cursor-pointer"
                 onClick={() => {}}
               >
-                Cerrar Sesión
+                Sign out
               </button>
             </div>
           </div>
@@ -37,7 +38,7 @@ export default function Dashboard({ user }: { user: User }) {
               <div className="flex-1 ">
                 <Outlet />
               </div>
-              <div className="w-full md:w-96 bg-slate-800 px-5 py-10 space-y-6"></div>
+              <Profile />
             </div>
           </main>
         </div>
