@@ -1,15 +1,12 @@
 import { BookmarkSquareIcon, UserIcon } from "@heroicons/react/20/solid";
 import type { ChangeEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router";
+import { classNames } from "../lib/util";
 
 const tabs = [
   { name: "Links", href: "/dashboard", icon: BookmarkSquareIcon },
   { name: "Mi Perfil", href: "/dashboard/profile", icon: UserIcon },
 ];
-
-function classNames(...classes: string[]) {
-  return classes.filter(Boolean).join(" ");
-}
 
 export default function NavigationTabs() {
   const location = useLocation();

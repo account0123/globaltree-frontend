@@ -1,3 +1,5 @@
+import type { SocialLink } from "./app";
+
 export type LoginCredentials = {
     email: string;
     password: string;
@@ -10,6 +12,7 @@ export type SignupFields = LoginCredentials & {
 }
 
 export type ProfileEditFields = {
-    slug: string;
+    slug?: string;
     description?: string;
+    links?: SocialLink[];
 }

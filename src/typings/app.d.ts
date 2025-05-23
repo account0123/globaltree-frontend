@@ -4,6 +4,7 @@ export interface User {
     description: string;
     name: string;
     slug: string;
+    links: SocialLink[] | undefined;
 }
 
 export interface File {
@@ -16,3 +17,12 @@ export interface File {
         height: number;
     };
 }
+
+export interface SocialNetwork {
+    _id: string;
+    name: string;
+    url: string;
+    enabled: boolean;
+}
+
+export type SocialLink = Pick<SocialNetwork, "name" | "url" | "enabled">;
