@@ -1,4 +1,4 @@
-import type { SocialLink } from "./app";
+import type { SocialLink, SortableSocialLink } from "./app";
 
 export type LoginCredentials = {
     email: string;
@@ -14,5 +14,5 @@ export type SignupFields = LoginCredentials & {
 export type ProfileEditFields = {
     slug?: string;
     description?: string;
-    links?: SocialLink[];
+    links?: SortableSocialLink[];
 }

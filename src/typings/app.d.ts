@@ -4,7 +4,7 @@ export interface User {
     description: string;
     name: string;
     slug: string;
-    links: SocialLink[] | undefined;
+    links: SortableSocialLink[] | undefined;
 }
 
 export interface File {
@@ -18,11 +18,11 @@ export interface File {
     };
 }
 
-export interface SocialNetwork {
-    _id: string;
+export interface SortableSocialLink {
+    id: number;
     name: string;
     url: string;
     enabled: boolean;
 }
 
-export type SocialLink = Pick<SocialNetwork, "name" | "url" | "enabled">;
+export type SocialLink = Pick<SortableSocialLink, "name" | "url" | "enabled">;
