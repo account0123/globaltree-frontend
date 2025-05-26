@@ -32,6 +32,11 @@ export class Client {
     return data;
   }
 
+  async getUserBySlug(slug: string) {
+    const { data } = await this.api.get<User>(`/users/${slug}`);
+    return data;
+  }
+
   async patchClientUser(user: Partial<User>) {
     try {
       const { data } = await this.api.patch<User>(`/users/@me`, user);
@@ -80,3 +85,6 @@ export class Client {
 
 const client = new Client(import.meta.env.VITE_API_URL);
 export const useClient = cache(() => client);
+export const useAnonymousClient = function(){
+  return client;
+}

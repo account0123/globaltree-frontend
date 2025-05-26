@@ -1,5 +1,5 @@
 import { useQueryClient } from "@tanstack/react-query";
-import type { SortableSocialLink, User } from "../typings/app";
+import type { SocialLink, SortableSocialLink, User } from "../typings/app";
 import { useEffect, useState } from "react";
 import {
   closestCenter,
@@ -52,24 +52,22 @@ export default function Profile() {
       [-1, -1]
     );
     if (actual < 0 || final < 0) return;
-    const ordered = arrayMove(enabledLinks, actual, final).map((l, i) => ({...l, id: i + 1}));
+    const ordered = arrayMove(enabledLinks, actual, final).map((l, i) => ({
+      ...l,
+      id: i + 1,
+    }));
     setEnabledLinks(ordered);
-    qClient.setQueryData(["user"], (actual: User)=>{
-      const disabledLinks = (actual.links?.filter((l) => !l.enabled) || []);
-      return {...actual, links: disabledLinks.concat(ordered)}
+    qClient.setQueryData(["user"], (actual: User) => {
+      const disabledLinks = actual.links?.filter((l) => !l.enabled) || [];
+      return { ...actual, links: disabledLinks.concat(ordered) };
     });
   }
   return (
     user && (
       <>
-        <p className="text-4xl text-slate-100 text-center">{user.name}</p>
-        {user.avatar && (
-          <img
-            src={user.avatar.url}
-            className="max-w-[250px] mx-auto rounded-md"
-          />
-        )}
-        <p className="text-xl text-slate-100 text-center">{user.description}</p>
+        <Profile.Title name={user.slug} />
+        {user.avatar && <Profile.Avatar avatar={user.avatar} />}
+        <Profile.Description description={user.description} />
         <DndContext
           sensors={sensors}
           collisionDetection={closestCenter}
@@ -81,7 +79,10 @@ export default function Profile() {
               strategy={verticalListSortingStrategy}
             >
               {enabledLinks.map((link) => (
-                <Profile.Link key={`${link.id}-${link.name}`} link={link} />
+                <Profile.SortableLink
+                  key={`${link.id}-${link.name}`}
+                  link={link}
+                />
               ))}
             </SortableContext>
           </div>
@@ -91,7 +92,43 @@ export default function Profile() {
   );
 }
 
-Profile.Link = function ({ link }: { link: SortableSocialLink }) {
+Profile.Title = function ({ name }: { name: string }) {
+  return <p className="text-center text-5xl font-black">{name}</p>;
+};
+
+Profile.Avatar = function ({ avatar }: { avatar: User["avatar"] }) {
+  return <img src={avatar.url} className="max-w-[250px] mx-auto rounded-md" />;
+};
+
+Profile.Description = function ({ description }: { description: string }) {
+  return <p className="text-center text-lg font-bold">{description}</p>;
+};
+
+/**
+ * Read-only component used to render a link
+ */
+Profile.Link = function ({ link }: { link: SocialLink }) {
+  return (
+    <a
+      className="bg-slate-600 px-5 py-2 flex items-center gap-5 rounded-md border-white border-2"
+      target="_blank"
+      rel="noreferrer noopener"
+      href={link.url}
+    >
+      <img
+        alt="Link icon"
+        src={`/social/icon_${link.name}.svg`}
+        className="w-12 h-12 bg-cover"
+      />
+      <p className="capitalize w-full text-center font-semibold">{link.name}</p>
+    </a>
+  );
+};
+
+/**
+ * Component used to render and allow sorting of a link
+ */
+Profile.SortableLink = function ({ link }: { link: SortableSocialLink }) {
   let { attributes, listeners, setNodeRef, transform, transition } =
     useSortable({ id: link.id });
   const style = {
@@ -100,18 +137,22 @@ Profile.Link = function ({ link }: { link: SortableSocialLink }) {
   };
 
   return (
-    <div
-      style={style}
+    <a
+      className="bg-slate-600 px-5 py-2 flex items-center gap-5 rounded-md border-white border-2"
+      target="_blank"
+      rel="noreferrer noopener"
+      href={link.url}
       ref={setNodeRef}
       {...attributes}
+      style={style}
       {...listeners}
-      className="flex items-center gap-1 border-white border-2 rounded-lg px-5 py-2 select-none"
     >
       <img
+        alt="Link icon"
         src={`/social/icon_${link.name}.svg`}
         className="w-12 h-12 bg-cover"
       />
       <p className="capitalize w-full text-center font-semibold">{link.name}</p>
-    </div>
+    </a>
   );
 };
