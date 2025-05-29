@@ -6,7 +6,7 @@ import PublicProfile from "../components/PublicProfile";
 export default function SlugView() {
     const apiClient = useAnonymousClient();
     const { slug } = useParams();
-    const { data, error, isLoading} = useQuery({
+    const { data, error } = useQuery({
         queryKey: ["slug", slug],
         queryFn: () => apiClient.getUserBySlug(slug!),
         retry: 1,
