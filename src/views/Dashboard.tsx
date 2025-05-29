@@ -3,25 +3,15 @@ import { Toaster } from "sonner";
 import NavigationTabs from "../components/NavigationTabs";
 import type { User } from "../typings/app";
 import Profile from "../components/Profile";
+import Header from "../components/Header";
+import DashboardNav from "../components/nav/DashboardNav";
 
 export default function Dashboard({ user }: { user: User }) {
   return (
     <>
-      <header className="bg-slate-800 py-5">
-        <div className="mx-auto max-w-5xl flex flex-col md:flex-row items-center md:justify-between">
-          <div className="w-full p-5 lg:p-0 md:w-1/3">
-            <img src="/logo.svg" className="w-full block" />
-          </div>
-          <div className="md:w-1/3 md:flex md:justify-end">
-            <button
-              className=" bg-lime-500 p-2 text-slate-800 uppercase font-black text-xs rounded-lg cursor-pointer"
-              onClick={() => {}}
-            >
-              Sign out
-            </button>
-          </div>
-        </div>
-      </header>
+      <Header>
+        <DashboardNav />
+      </Header>
       <div className="bg-gray-100  min-h-screen py-10">
         <main className="mx-auto max-w-5xl p-10 md:p-0">
           <NavigationTabs />

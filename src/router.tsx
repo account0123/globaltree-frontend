@@ -7,11 +7,13 @@ import LinkTreeView from "./views/LinkTreeView";
 import ProfileView from "./views/ProfileView";
 import SlugView from "./views/SlugView";
 import NotFoundView from "./views/NotFoundView";
+import HomeView from "./views/HomeView";
 
 export default function Router() {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<HomeView />} />
         <Route element={<AuthLayout />}>
           <Route path="/auth/login" element={<Login />} />
           <Route path="/auth/create" element={<Register />} />
