@@ -4,14 +4,17 @@ import type { SignupFields } from "../typings/Form";
 import { toast } from "sonner";
 import { isAxiosError } from "axios";
 import { useClient } from "../lib/Client";
+import { useLocation, useNavigate } from "react-router";
 
 export default function SignupForm() {
 
+  const navigate = useNavigate();
   const client = useClient();
+  const { state } = useLocation();
   const defaultValues: SignupFields = {
     name: "",
     email: "",
-    slug: "",
+    slug: state?.username || "",
     password: "",
     password2: "",
   };
@@ -28,6 +31,8 @@ export default function SignupForm() {
       await client.createAccount(fields);
       toast.success("Account created successfully");
       reset();
+      state.username = undefined;
+      navigate("/auth/login");
     } catch (error) {
       if (isAxiosError(error) && error.response) {
         console.error(error.response.data);

@@ -16,3 +16,7 @@ export type ProfileEditFields = {
     description?: string;
     links?: SortableSocialLink[];
 }
+
+export type UserSearchFields = {
+    username: string;
+}

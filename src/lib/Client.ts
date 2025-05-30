@@ -22,6 +22,19 @@ export class Client {
     });
   }
 
+  async checkSlugAvailability(slug: string) {
+    try {
+      await this.api.post(`/users/available`, { slug }); // No response
+      return slug;
+    } catch (error) {
+      if (isAxiosError(error) && error.response) {
+        throw new Error(error.response.data.message);
+      }
+      throw error;
+    }
+   
+  }
+
   async createAccount(credentials: SignupFields) {
     const { data } = await this.api.post(`/auth/create`, credentials);
     return data;
